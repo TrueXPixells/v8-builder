@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [android, linux, mac, win]
+        platform: [android, linux, win, mac]
         type: [with-mono, without-mono]
         arch: [armv7, arm64, x64, x86]
         exclude:
