@@ -72,7 +72,7 @@ jobs:
         upload_url: ${{ github.event.release.upload_url }}
         prerelease: false
     - name: Upload Release Asset (with-mono)
-      if: github.event_name == 'release' && matrix.type == "with-mono"
+      if: github.event_name == 'release' && matrix.type == 'with-mono'
       uses: actions/upload-release-asset@v1
       env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
@@ -82,7 +82,7 @@ jobs:
         asset_name: v8_monolith_${{ matrix.platform }}-${{ matrix.arch }}.zip
         asset_content_type: application/zip
     - name: Upload Release Asset (without-mono)
-      if: github.event_name == 'release' && matrix.type == "without-mono"
+      if: github.event_name == 'release' && matrix.type == 'without-mono'
       uses: actions/upload-release-asset@v1
       env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
@@ -92,13 +92,13 @@ jobs:
         asset_name: v8_${{ matrix.platform }}-${{ matrix.arch }}.zip
         asset_content_type: application/zip       
     - name: Upload artifact (with-mono)
-      if: matrix.type == "with-mono"
+      if: matrix.type == 'with-mono'
       uses: actions/upload-artifact@v3
       with:
         name: v8_monolith_${{ matrix.platform }}-${{ matrix.arch }}.zip
         path: ./v8_monolith_${{ matrix.platform }}-${{ matrix.arch }}.zip
     - name: Upload artifact (without-mono)
-      if: matrix.type == "without-mono"
+      if: matrix.type == 'without-mono'
       uses: actions/upload-artifact@v3
       with:
         name: v8_${{ matrix.platform }}-${{ matrix.arch }}.zip
