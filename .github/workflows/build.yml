@@ -27,7 +27,7 @@ jobs:
             arch: x86
           - platform: linux
             arch: x86
-          - platform: windows
+          - platform: win
             arch: armv7
           - platform: mac
             arch: armv7
