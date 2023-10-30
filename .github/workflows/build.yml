@@ -61,14 +61,6 @@ jobs:
         _args+=" 17"
         fi
         bash ./build.sh $_args
-    - name: Update Release status
-      if: github.event_name == 'release'
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        prerelease: false
     - name: Upload Release Asset (with-mono)
       if: github.event_name == 'release' && matrix.type == 'with-mono'
       uses: actions/upload-release-asset@v1
