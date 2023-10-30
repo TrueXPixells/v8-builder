@@ -15,7 +15,6 @@ V8 binaries are built for the following platforms:
 - Android (armv7, arm64, x64, x86)
 - macOS (x64, arm64)
 - Windows (x64, x86, arm64)
-- IOS (Fail) (12, 15, 16, 17)
 
 Headers are included!
 
