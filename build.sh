@@ -9,7 +9,8 @@ PLATFORM=$3
 SHORT_PLATFORM=$4
 ARCH=$5
 SHORT_ARCH=$6
-IOS_DEPLOY_TARGET=$7
+IS_MONOLITHIC_BUILD=$7
+IOS_DEPLOY_TARGET=$8
 
 # Conf
 if [[ "$SHORT_PLATFORM" == "linux" || "$SHORT_PLATFORM" == "android" ]]; then
@@ -80,11 +81,17 @@ fi
 if [ $SHORT_PLATFORM = "ios" ]; then
 ARGS="v8_enable_pointer_compression=false ios_enable_code_signing=false ios_deployment_target=\"$IOS_DEPLOY_TARGET\""
 fi
-python ./tools/dev/v8gen.py $ARCH -vv --no-goma -- $ARGS target_os=\"$SHORT_PLATFORM\" target_cpu=\"$SHORT_ARCH\" v8_target_cpu=\"$SHORT_ARCH\" is_component_build=false use_goma=false v8_monolithic=true use_custom_libcxx=false v8_enable_sandbox=false v8_enable_i18n_support=true v8_use_external_startup_data=false symbol_level=0
+if [ $IS_MONOLITHIC_BUILD = "true" ];
+ARGS+=" v8_monolithic=true"
+then
+python ./tools/dev/v8gen.py $ARCH -vv --no-goma -- $ARGS target_os=\"$SHORT_PLATFORM\" target_cpu=\"$SHORT_ARCH\" v8_target_cpu=\"$SHORT_ARCH\" is_component_build=false use_goma=false enable_nacl=false use_custom_libcxx=false v8_enable_sandbox=false v8_enable_i18n_support=true v8_use_external_startup_data=false symbol_level=0
 
 ninja -C out.gn/$ARCH -t clean 1> nul
+if [ $IS_MONOLITHIC_BUILD = "true" ];
 ninja -C out.gn/$ARCH v8_monolith
-
+else
+ninja -C out.gn/$ARCH v8
+fi
 
 # ZIP
 
@@ -99,16 +106,21 @@ find ~/v8/v8/out.gn/$ARCH/obj -type f -maxdepth 1
 cp ~/v8/v8/out.gn/$ARCH/args.gn ~/v8_zip
 cp ~/v8/v8/out.gn/$ARCH/icudtl.dat ~/v8_zip
 cp ~/v8/v8/out.gn/$ARCH/*.dll ~/v8_zip
-cp ~/v8/v8/out.gn/$ARCH/obj/v8_monolith.lib ~/v8_zip
-cp ~/v8/v8/out.gn/$ARCH/obj/libv8_monolith.a ~/v8_zip
+cp ~/v8/v8/out.gn/$ARCH/obj/v8*.lib ~/v8_zip
+cp ~/v8/v8/out.gn/$ARCH/obj/libv8*.a ~/v8_zip
 cp ~/v8/v8/out.gn/$ARCH/obj/*.dylib ~/v8_zip
 
 # Enable "exit on error"
 set -e
 
+if [ $IS_MONOLITHIC_BUILD = "true" ];
+_NAME="v8_monolith_$PLATFORM.zip"
+else
+_NAME="v8_$PLATFORM.zip"
+fi
 
 if [ $SHORT_PLATFORM != "win" ]; then
-zip -r v8_monolith_$PLATFORM.zip ~/v8_zip/* 1> nul
+zip -r $_NAME ~/v8_zip/* 1> nul
 else
-7z a v8_monolith_$PLATFORM.zip ~/v8_zip 1> nul
+7z a $_NAME ~/v8_zip 1> nul
 fi
