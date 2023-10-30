@@ -7,7 +7,7 @@ on:
         type: text
         required: true
   release:
-    types: [published]
+    types: [prereleased]
 
 permissions: write-all
 
