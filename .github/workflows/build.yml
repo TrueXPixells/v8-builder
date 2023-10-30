@@ -1,0 +1,83 @@
+name: Build V8
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: text
+        required: true
+  release:
+    types: [published]
+
+permissions: write-all
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [android, linux, mac, windows, ios]
+        arch: [armv7, arm64, x64, x86]
+        exclude:
+          - platform: ios
+            arch: armv7
+          - platform: ios
+            arch: x64
+          - platform: ios
+            arch: x86
+          - platform: linux
+            arch: x86
+          - platform: windows
+            arch: armv7
+          - platform: mac
+            arch: armv7
+    name: ${{ matrix.platform }}-${{ matrix.arch }}
+    runs-on: ${{ (( matrix.platform == 'mac' || matrix.platform == 'ios') && 'macos-13') || ( matrix.platform == 'windows' && 'windows-latest') || (( matrix.platform == 'linux' ||  matrix.platform == 'android') && 'ubuntu-latest') }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run build script
+      shell: bash
+      run: |
+        cd $GITHUB_WORKSPACE
+        chmod +x ./build.sh
+        _args="${{ github.event.inputs.version || github.event.release.tag_name }} $GITHUB_WORKSPACE ${{ matrix.platform }}-${{ matrix.arch }} ${{ matrix.platform }}"
+        if [ "${{ matrix.arch }}" = "armv7" ]; then
+        _args+=" arm.release arm"
+        fi
+        if [ "${{ matrix.arch }}" = "arm64" ]; then
+        _args+=" arm64.release arm64"
+        fi
+        if [ "${{ matrix.arch }}" = "x64" ]; then
+        _args+=" x64.release x64"
+        fi
+        if [ "${{ matrix.arch }}" = "x86" ]; then
+        _args+=" ia32.release x86"
+        fi
+
+        if [ "${{ matrix.platform }}" = "ios" ]; then
+        _args+=" 17"
+        fi
+        bash ./build.sh $_args
+    - name: Update Release status
+      if: github.event_name == 'release'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        draft: false
+    - name: Upload Release Asset
+      if: github.event_name == 'release'
+      uses: actions/upload-release-asset@v1
+      env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./v8_monolith_${{ matrix.platform }}-${{ matrix.arch }}.zip
+        asset_name: v8_monolith_${{ matrix.platform }}-${{ matrix.arch }}.zip
+        asset_content_type: application/zip
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: v8_monolith_${{ matrix.platform }}-${{ matrix.arch }}.zip
+        path: ./v8_monolith_${{ matrix.platform }}-${{ matrix.arch }}.zip
