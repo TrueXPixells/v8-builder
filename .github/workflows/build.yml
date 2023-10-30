@@ -17,6 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         platform: [android, linux, mac, win, ios]
+        type: [with-mono, without-mono]
         arch: [armv7, arm64, x64, x86]
         exclude:
           - platform: ios
@@ -31,7 +32,7 @@ jobs:
             arch: armv7
           - platform: mac
             arch: armv7
-    name: ${{ matrix.platform }}-${{ matrix.arch }}
+    name: ${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type }}
     runs-on: ${{ (( matrix.platform == 'mac' || matrix.platform == 'ios') && 'macos-13') || ( matrix.platform == 'windows' && 'windows-latest') || (( matrix.platform == 'linux' ||  matrix.platform == 'android') && 'ubuntu-latest') }}
     steps:
     - uses: actions/checkout@v4
@@ -53,7 +54,11 @@ jobs:
         if [ "${{ matrix.arch }}" = "x86" ]; then
         _args+=" ia32.release x86"
         fi
-
+        if [ "${{ matrix.type }}" = "with-mono" ]; then
+        _args+=" true"
+        else
+        _args+=" false"
+        fi
         if [ "${{ matrix.platform }}" = "ios" ]; then
         _args+=" 17"
         fi
@@ -66,8 +71,8 @@ jobs:
       with:
         upload_url: ${{ github.event.release.upload_url }}
         draft: false
-    - name: Upload Release Asset
-      if: github.event_name == 'release'
+    - name: Upload Release Asset (with-mono)
+      if: github.event_name == 'release' && matrix.type == "with-mono"
       uses: actions/upload-release-asset@v1
       env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
@@ -76,8 +81,25 @@ jobs:
         asset_path: ./v8_monolith_${{ matrix.platform }}-${{ matrix.arch }}.zip
         asset_name: v8_monolith_${{ matrix.platform }}-${{ matrix.arch }}.zip
         asset_content_type: application/zip
-    - name: Upload artifact
+    - name: Upload Release Asset (without-mono)
+      if: github.event_name == 'release' && matrix.type == "without-mono"
+      uses: actions/upload-release-asset@v1
+      env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./v8_${{ matrix.platform }}-${{ matrix.arch }}.zip
+        asset_name: v8_${{ matrix.platform }}-${{ matrix.arch }}.zip
+        asset_content_type: application/zip       
+    - name: Upload artifact (with-mono)
+      if: matrix.type == "with-mono"
       uses: actions/upload-artifact@v3
       with:
         name: v8_monolith_${{ matrix.platform }}-${{ matrix.arch }}.zip
         path: ./v8_monolith_${{ matrix.platform }}-${{ matrix.arch }}.zip
+    - name: Upload artifact (without-mono)
+      if: matrix.type == "without-mono"
+      uses: actions/upload-artifact@v3
+      with:
+        name: v8_${{ matrix.platform }}-${{ matrix.arch }}.zip
+        path: ./v8_${{ matrix.platform }}-${{ matrix.arch }}.zip
