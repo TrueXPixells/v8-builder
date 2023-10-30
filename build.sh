@@ -81,15 +81,15 @@ fi
 if [ $SHORT_PLATFORM = "ios" ]; then
 ARGS="v8_enable_pointer_compression=false ios_enable_code_signing=false ios_deployment_target=\"$IOS_DEPLOY_TARGET\""
 fi
-if [ $IS_MONOLITHIC_BUILD = "true" ];
+if [ $IS_MONOLITHIC_BUILD = "true" ]; then
 ARGS+=" v8_monolithic=true"
 else
 ARGS+=" v8_monolithic=false"
-then
+fi
 python ./tools/dev/v8gen.py $ARCH -vv --no-goma -- $ARGS target_os=\"$SHORT_PLATFORM\" target_cpu=\"$SHORT_ARCH\" v8_target_cpu=\"$SHORT_ARCH\" is_component_build=false use_goma=false enable_nacl=false use_custom_libcxx=false v8_enable_sandbox=false v8_enable_i18n_support=true v8_use_external_startup_data=false symbol_level=0
 
 ninja -C out.gn/$ARCH -t clean 1> nul
-if [ $IS_MONOLITHIC_BUILD = "true" ];
+if [ $IS_MONOLITHIC_BUILD = "true" ]; then
 ninja -C out.gn/$ARCH v8_monolith
 else
 ninja -C out.gn/$ARCH v8
@@ -115,7 +115,7 @@ cp ~/v8/v8/out.gn/$ARCH/obj/*.dylib ~/v8_zip
 # Enable "exit on error"
 set -e
 
-if [ $IS_MONOLITHIC_BUILD = "true" ];
+if [ $IS_MONOLITHIC_BUILD = "true" ]; then
 _NAME="v8_monolith_$PLATFORM.zip"
 else
 _NAME="v8_$PLATFORM.zip"
