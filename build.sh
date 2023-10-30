@@ -83,6 +83,8 @@ ARGS="v8_enable_pointer_compression=false ios_enable_code_signing=false ios_depl
 fi
 if [ $IS_MONOLITHIC_BUILD = "true" ];
 ARGS+=" v8_monolithic=true"
+else
+ARGS+=" v8_monolithic=false"
 then
 python ./tools/dev/v8gen.py $ARCH -vv --no-goma -- $ARGS target_os=\"$SHORT_PLATFORM\" target_cpu=\"$SHORT_ARCH\" v8_target_cpu=\"$SHORT_ARCH\" is_component_build=false use_goma=false enable_nacl=false use_custom_libcxx=false v8_enable_sandbox=false v8_enable_i18n_support=true v8_use_external_startup_data=false symbol_level=0
 
