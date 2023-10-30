@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [android, linux, mac, windows, ios]
+        platform: [android, linux, mac, win, ios]
         arch: [armv7, arm64, x64, x86]
         exclude:
           - platform: ios
