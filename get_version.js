@@ -15,8 +15,8 @@ var vars = [];
       repo: context.repo.repo,
       tag_name: ver,
       name: `V8 Build (${ver})`,
-      draft: true,
-      prerelease: false,
+      draft: false,
+      prerelease: true,
       target_commitish: context.sha
     });
 })
