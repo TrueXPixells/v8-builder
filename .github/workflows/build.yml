@@ -31,7 +31,7 @@ jobs:
           - platform: mac
             arch: x86
     name: ${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type }}
-    runs-on: ${{ (( matrix.platform == 'mac' || matrix.platform == 'ios') && 'macos-13') || ( matrix.platform == 'windows' && 'windows-latest') || (( matrix.platform == 'linux' ||  matrix.platform == 'android') && 'ubuntu-latest') }}
+    runs-on: ${{ (( matrix.platform == 'mac' || matrix.platform == 'ios') && 'macos-13') || ( matrix.platform == 'win' && 'windows-latest') || (( matrix.platform == 'linux' ||  matrix.platform == 'android') && 'ubuntu-latest') }}
     steps:
     - uses: actions/checkout@v4
     - name: Run build script
