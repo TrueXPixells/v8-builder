@@ -16,22 +16,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [android, linux, mac, win, ios]
+        platform: [android, linux, mac, win]
         type: [with-mono, without-mono]
         arch: [armv7, arm64, x64, x86]
         exclude:
-          - platform: ios
-            arch: armv7
-          - platform: ios
-            arch: x64
-          - platform: ios
-            arch: x86
           - platform: linux
             arch: x86
           - platform: win
             arch: armv7
+          - platform: win
+            arch: x86
           - platform: mac
             arch: armv7
+          - platform: mac
+            arch: x86
     name: ${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type }}
     runs-on: ${{ (( matrix.platform == 'mac' || matrix.platform == 'ios') && 'macos-13') || ( matrix.platform == 'windows' && 'windows-latest') || (( matrix.platform == 'linux' ||  matrix.platform == 'android') && 'ubuntu-latest') }}
     steps:
