@@ -10,7 +10,8 @@ SHORT_PLATFORM=$4
 ARCH=$5
 SHORT_ARCH=$6
 IS_MONOLITHIC_BUILD=$7
-IOS_DEPLOY_TARGET=$8
+IS_DEBUG=$8
+IOS_DEPLOY_TARGET=$9
 
 # Conf
 if [[ "$SHORT_PLATFORM" == "linux" || "$SHORT_PLATFORM" == "android" ]]; then
@@ -79,11 +80,16 @@ if [ $SHORT_PLATFORM = "ios" ]; then
 ARGS="v8_enable_pointer_compression=false ios_enable_code_signing=false ios_deployment_target=\"$IOS_DEPLOY_TARGET\""
 fi
 if [ $IS_MONOLITHIC_BUILD = "true" ]; then
-ARGS+=" v8_monolithic=true"
+ARGS+=" v8_monolithic=true is_component_build=false"
 else
-ARGS+=" v8_monolithic=false"
+ARGS+=" v8_monolithic=false is_component_build=true"
 fi
-python ./tools/dev/v8gen.py $ARCH -vv --no-goma -- $ARGS target_os=\"$SHORT_PLATFORM\" target_cpu=\"$SHORT_ARCH\" v8_target_cpu=\"$SHORT_ARCH\" is_component_build=false use_goma=false enable_nacl=false use_custom_libcxx=false v8_enable_sandbox=false v8_enable_i18n_support=true v8_use_external_startup_data=false symbol_level=0
+if [ $IS_DEBUG = "true" ]; then
+ARGS+=" is_debug=true"
+else
+ARGS+=" is_debug=false"
+fi
+python ./tools/dev/v8gen.py $ARCH -vv --no-goma -- $ARGS target_os=\"$SHORT_PLATFORM\" target_cpu=\"$SHORT_ARCH\" v8_target_cpu=\"$SHORT_ARCH\" use_goma=false enable_nacl=false use_custom_libcxx=false v8_enable_sandbox=false v8_enable_i18n_support=true v8_use_external_startup_data=false symbol_level=0
 
 ninja -C out.gn/$ARCH -t clean 1> nul
 if [ $IS_MONOLITHIC_BUILD = "true" ]; then
