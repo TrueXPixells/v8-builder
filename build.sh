@@ -106,10 +106,13 @@ cp -r ~/v8/v8/include ~/v8_zip 1> nul
 
 # Disable "exit on error"
 set +e
-find ~/v8/v8/out.gn/$ARCH -type f -maxdepth 1 -not -name "*.stamp" -not -name "*.ninja"
-find ~/v8/v8/out.gn/$ARCH/obj -type f -maxdepth 1 -not -name "*.stamp" -not -name "*.ninja"
+find ~/v8/v8/out.gn/$ARCH ~/v8/v8/out.gn/$ARCH/obj -type f -maxdepth 1 -not -name "*.stamp" -not -name "*.ninja" -not -name "*.json" -not -name "*.TOC"
 cp ~/v8/v8/out.gn/$ARCH/args.gn ~/v8_zip
 cp ~/v8/v8/out.gn/$ARCH/icudtl.dat ~/v8_zip
+cp ~/v8/v8/out.gn/$ARCH/libv8.so ~/v8_zip
+cp ~/v8/v8/out.gn/$ARCH/obj/libv8_monolith.a ~/v8_zip
+
+
 cp ~/v8/v8/out.gn/$ARCH/*.dll ~/v8_zip
 cp ~/v8/v8/out.gn/$ARCH/*.lib ~/v8_zip
 cp ~/v8/v8/out.gn/$ARCH/*.a ~/v8_zip
