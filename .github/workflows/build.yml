@@ -19,17 +19,24 @@ jobs:
         platform: [android, linux, win, mac]
         type: [static, shared]
         type2: [shipping, debug]
-        arch: [arm64, x64]
-        include:
-        - platform: android
-          arch: armv7
-        - platform: android
-          arch: x86
+        arch: [armv7, arm64, x64, x86]
         exclude:
           - platform: android
             type: shared
           - platform: windows
             type: shared
+          - platform: linux
+            arch: armv7
+          - platform: linux
+            arch: x86
+          - platform: win
+            arch: armv7
+          - platform: win
+            arch: x86
+          - platform: mac
+            arch: armv7
+          - platform: mac
+            arch: x86
     name: ${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type }}-${{ matrix.type2 }}
     runs-on: ${{ (( matrix.platform == 'mac' || matrix.platform == 'ios') && 'macos-13') || ( matrix.platform == 'win' && 'windows-latest') || (( matrix.platform == 'linux' ||  matrix.platform == 'android') && 'ubuntu-latest') }}
     steps:
