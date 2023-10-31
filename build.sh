@@ -86,7 +86,11 @@ fi
 python ./tools/dev/v8gen.py $ARCH -vv --no-goma -- $ARGS target_os=\"$SHORT_PLATFORM\" target_cpu=\"$SHORT_ARCH\" v8_target_cpu=\"$SHORT_ARCH\" is_component_build=false use_goma=false enable_nacl=false use_custom_libcxx=false v8_enable_sandbox=false v8_enable_i18n_support=true v8_use_external_startup_data=false symbol_level=0
 
 ninja -C out.gn/$ARCH -t clean 1> nul
-ninja -C out.gn/$ARCH
+if [ $IS_MONOLITHIC_BUILD = "true" ]; then
+ninja -C out.gn/$ARCH v8_monolith
+else
+ninja -C out.gn/$ARCH v8
+fi
 
 # ZIP
 
