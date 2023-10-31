@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         platform: [android, linux, win, mac]
-        type: [with-mono, without-mono]
+        type: [static, shared]
         type2: [shipping, debug]
         arch: [armv7, arm64, x64, x86]
         exclude:
@@ -53,7 +53,7 @@ jobs:
         if [ "${{ matrix.arch }}" = "x86" ]; then
         _args+=" ia32.release x86"
         fi
-        if [ "${{ matrix.type }}" = "with-mono" ]; then
+        if [ "${{ matrix.type }}" = "static" ]; then
         _args+=" true"
         else
         _args+=" false"
@@ -67,35 +67,18 @@ jobs:
         _args+=" 17"
         fi
         bash ./build.sh $_args
-    - name: Upload Release Asset (with-mono)
-      if: github.event_name == 'release' && matrix.type == 'with-mono'
+    - name: Upload Release Asset
+      if: github.event_name == 'release'
       uses: actions/upload-release-asset@v1
       env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./v8_monolith_${{ matrix.platform }}-${{ matrix.arch }}.zip
-        asset_name: v8_monolith_${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type2 }}.zip
+        asset_path: ./v8.zip
+        asset_name: v8_${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type }}-${{ matrix.type2 }}.zip
         asset_content_type: application/zip
-    - name: Upload Release Asset (without-mono)
-      if: github.event_name == 'release' && matrix.type == 'without-mono'
-      uses: actions/upload-release-asset@v1
-      env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./v8_${{ matrix.platform }}-${{ matrix.arch }}.zip
-        asset_name: v8_${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type2 }}.zip
-        asset_content_type: application/zip       
-    - name: Upload artifact (with-mono)
-      if: matrix.type == 'with-mono'
+    - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: v8_monolith_${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type2 }}.zip
-        path: ./v8_monolith_${{ matrix.platform }}-${{ matrix.arch }}.zip
-    - name: Upload artifact (without-mono)
-      if: matrix.type == 'without-mono'
-      uses: actions/upload-artifact@v3
-      with:
-        name: v8_${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type2 }}.zip
-        path: ./v8_${{ matrix.platform }}-${{ matrix.arch }}.zip
+        name: v8_${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type }}-${{ matrix.type2 }}.zip
+        path: ./v8.zip
