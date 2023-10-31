@@ -28,6 +28,8 @@ jobs:
         exclude:
           - platform: android
             type: shared
+          - platform: windows
+            type: shared
     name: ${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type }}-${{ matrix.type2 }}
     runs-on: ${{ (( matrix.platform == 'mac' || matrix.platform == 'ios') && 'macos-13') || ( matrix.platform == 'win' && 'windows-latest') || (( matrix.platform == 'linux' ||  matrix.platform == 'android') && 'ubuntu-latest') }}
     steps:
