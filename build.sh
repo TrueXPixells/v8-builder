@@ -111,21 +111,19 @@ find ~/v8/v8/out.gn/$ARCH/obj -type f -maxdepth 1 -not -name "*.stamp" -not -nam
 cp ~/v8/v8/out.gn/$ARCH/args.gn ~/v8_zip
 cp ~/v8/v8/out.gn/$ARCH/icudtl.dat ~/v8_zip
 cp ~/v8/v8/out.gn/$ARCH/*.dll ~/v8_zip
-cp ~/v8/v8/out.gn/$ARCH/obj/v8*.lib ~/v8_zip
-cp ~/v8/v8/out.gn/$ARCH/obj/libv8*.a ~/v8_zip
+cp ~/v8/v8/out.gn/$ARCH/*.lib ~/v8_zip
+cp ~/v8/v8/out.gn/$ARCH/*.a ~/v8_zip
+cp ~/v8/v8/out.gn/$ARCH/*.dylib ~/v8_zip
+cp ~/v8/v8/out.gn/$ARCH/obj/*.dll ~/v8_zip
+cp ~/v8/v8/out.gn/$ARCH/obj/*.lib ~/v8_zip
+cp ~/v8/v8/out.gn/$ARCH/obj/*.a ~/v8_zip
 cp ~/v8/v8/out.gn/$ARCH/obj/*.dylib ~/v8_zip
 
 # Enable "exit on error"
 set -e
 
-if [ $IS_MONOLITHIC_BUILD = "true" ]; then
-_NAME="v8_monolith_$PLATFORM.zip"
-else
-_NAME="v8_$PLATFORM.zip"
-fi
-
 if [ $SHORT_PLATFORM != "win" ]; then
-zip -r $_NAME ~/v8_zip/* 1> nul
+zip -r v8.zip ~/v8_zip/* 1> nul
 else
-7z a $_NAME ~/v8_zip 1> nul
+7z a v8.zip ~/v8_zip 1> nul
 fi
