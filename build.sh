@@ -17,10 +17,6 @@ if [[ "$PLATFORM" == "linux" || "$PLATFORM" == "android" ]]; then
     sudo apt-get upgrade -y 1> nul
 fi
 
-if [ "$PLATFORM" = "mac" ]; then
-brew install gnu-sed
-fi
-
 git config --global user.name "V8 Builder" 1> nul
 git config --global user.email "v8.builder@localhost" 1> nul
 git config --global core.autocrlf false 1> nul
@@ -91,10 +87,8 @@ else
 ARGS+=" is_debug=false"
 fi
 
-if [ $PLATFORM = "mac" ]; then
-gsed -i 's/"-Wmissing-field-initializers",/"-Wmissing-field-initializers","-Wctad-maybe-unsupported","-D_SILENCE_ALL_CXX20_DEPRECATION_WARNINGS",/' BUILD.gn
-else
- sed -i 's/"-Wmissing-field-initializers",/"-Wmissing-field-initializers","-Wctad-maybe-unsupported","-D_SILENCE_ALL_CXX20_DEPRECATION_WARNINGS",/' BUILD.gn
+if [ $PLATFORM = "win" ]; then
+ sed -i 's/"-Wmissing-field-initializers",/"-Wmissing-field-initializers","-D_SILENCE_ALL_CXX20_DEPRECATION_WARNINGS",/' BUILD.gn
 fi
 
 if [ $ARCH = "x86" ]; then
