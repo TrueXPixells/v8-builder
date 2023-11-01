@@ -17,6 +17,11 @@ if [[ "$PLATFORM" == "linux" || "$PLATFORM" == "android" ]]; then
     sudo apt-get upgrade -y 1> nul
 fi
 
+if [ "$PLATFORM" = "mac" ]; then
+brew install gnu-sed
+alias sed='gsed'
+fi
+
 git config --global user.name "V8 Builder" 1> nul
 git config --global user.email "v8.builder@localhost" 1> nul
 git config --global core.autocrlf false 1> nul
@@ -24,7 +29,7 @@ git config --global core.filemode false 1> nul
 
 cd ~
 echo "=====[ Getting Depot Tools ]====="
-if [ $PLATFORM = "win" ]; then    
+if [ "$PLATFORM" = "win" ]; then    
     powershell -command "Invoke-WebRequest https://storage.googleapis.com/chrome-infra/depot_tools.zip -O depot_tools.zip" 1> nul
     7z x depot_tools.zip -o* 1> nul
     export DEPOT_TOOLS_WIN_TOOLCHAIN=0
@@ -32,7 +37,7 @@ else
     git clone -q https://chromium.googlesource.com/chromium/tools/depot_tools.git 1> nul
 fi
 export PATH=$(pwd)/depot_tools:$PATH
-if [ $PLATFORM = "win" ]; then  
+if [ "$PLATFORM" = "win" ]; then  
 gclient
 fi
 # Build
