@@ -20,6 +20,6 @@ var vars = [];
       target_commitish: context.sha
     });
     } catch (e) {
-    console.error("Caught Error: " + e)
+    console.log("Caught Error: " + e)
     }
 })
