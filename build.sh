@@ -19,7 +19,6 @@ fi
 
 if [ "$PLATFORM" = "mac" ]; then
 brew install gnu-sed
-alias sed='gsed'
 fi
 
 git config --global user.name "V8 Builder" 1> nul
@@ -91,7 +90,13 @@ ARGS+=" is_debug=true"
 else
 ARGS+=" is_debug=false"
 fi
-sed -i 's/"-Wmissing-field-initializers",/"-Wmissing-field-initializers","-Wctad-maybe-unsupported","-D_SILENCE_ALL_CXX20_DEPRECATION_WARNINGS",/' BUILD.gn
+
+if [ $PLATFORM = "mac" ]; then
+ sed -i 's/"-Wmissing-field-initializers",/"-Wmissing-field-initializers","-Wctad-maybe-unsupported","-D_SILENCE_ALL_CXX20_DEPRECATION_WARNINGS",/' BUILD.gn
+else
+gsed -i 's/"-Wmissing-field-initializers",/"-Wmissing-field-initializers","-Wctad-maybe-unsupported","-D_SILENCE_ALL_CXX20_DEPRECATION_WARNINGS",/' BUILD.gn
+fi
+
 if [ $ARCH = "x86" ]; then
 OARCH="x86"
 ARCH="ia32"
