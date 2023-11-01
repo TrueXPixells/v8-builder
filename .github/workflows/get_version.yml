@@ -16,6 +16,7 @@ jobs:
   version_finder:
     name: Get version number
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v3
@@ -27,6 +28,5 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.PAT }}
       run: |
         cd $GITHUB_WORKSPACE
-        set +e
         npm i @actions/github@2.2.0
         node ./get_version.js
