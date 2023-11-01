@@ -135,5 +135,5 @@ set -e
 if [ $PLATFORM != "win" ]; then
 zip -r v8.zip ~/v8_zip/* 1> nul
 else
-7z a v8.zip ~/v8_zip 1> nul
+7z a v8.zip ~/v8_zip/* 1> nul
 fi
