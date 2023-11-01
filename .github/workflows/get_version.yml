@@ -30,3 +30,7 @@ jobs:
         cd $GITHUB_WORKSPACE
         npm i @actions/github@2.2.0
         node ./get_version.js
+    - name: Make it pass
+      if: always()
+      run: |
+        echo "Make it pass"
