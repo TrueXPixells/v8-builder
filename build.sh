@@ -92,9 +92,9 @@ ARGS+=" is_debug=false"
 fi
 
 if [ $PLATFORM = "mac" ]; then
- sed -i 's/"-Wmissing-field-initializers",/"-Wmissing-field-initializers","-Wctad-maybe-unsupported","-D_SILENCE_ALL_CXX20_DEPRECATION_WARNINGS",/' BUILD.gn
-else
 gsed -i 's/"-Wmissing-field-initializers",/"-Wmissing-field-initializers","-Wctad-maybe-unsupported","-D_SILENCE_ALL_CXX20_DEPRECATION_WARNINGS",/' BUILD.gn
+else
+ sed -i 's/"-Wmissing-field-initializers",/"-Wmissing-field-initializers","-Wctad-maybe-unsupported","-D_SILENCE_ALL_CXX20_DEPRECATION_WARNINGS",/' BUILD.gn
 fi
 
 if [ $ARCH = "x86" ]; then
