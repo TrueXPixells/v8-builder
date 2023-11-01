@@ -9,7 +9,7 @@ var vars = [];
     }
 })().then(() => {
     const ver = vars.map(a => a.split('.').map(n => +n + 100000).join('.')).sort().map(a => a.split('.').map(n => +n - 100000).join('.'))[1];
-    
+    try {
     new GitHub(process.env.GITHUB_TOKEN).repos.createRelease({
       owner: context.repo.owner,
       repo: context.repo.repo,
@@ -19,4 +19,7 @@ var vars = [];
       prerelease: true,
       target_commitish: context.sha
     });
+    } catch (e) {
+    console.error("Caught Error: " + e)
+    }
 })
