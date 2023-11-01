@@ -31,6 +31,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.PAT }}
       run: |
         cd $GITHUB_WORKSPACE
+        set -e
         npm i @actions/github@2.2.0
         node ./get_version.js
 #        version=$()
