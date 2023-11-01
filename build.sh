@@ -103,7 +103,7 @@ ARCH="ia32"
 else
 OARCH=$ARCH
 fi
-python ./tools/dev/v8gen.py $PARCH.release -vv --no-goma -- $ARGS target_os=\"$PLATFORM\" target_cpu=\"$OARCH\" v8_target_cpu=\"$OARCH\" use_goma=false enable_nacl=false use_custom_libcxx=false v8_enable_sandbox=false v8_enable_i18n_support=true v8_use_external_startup_data=false symbol_level=0
+python ./tools/dev/v8gen.py $ARCH.release -vv --no-goma -- $ARGS target_os=\"$PLATFORM\" target_cpu=\"$OARCH\" v8_target_cpu=\"$OARCH\" use_goma=false enable_nacl=false use_custom_libcxx=false v8_enable_sandbox=false v8_enable_i18n_support=true v8_use_external_startup_data=false symbol_level=0
 
 ninja -C out.gn/$ARCH.release -t clean 1> nul
 if [ $IS_MONOLITHIC_BUILD = "true" ]; then
