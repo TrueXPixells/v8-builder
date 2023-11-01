@@ -29,6 +29,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE
         npm i @actions/github@2.2.0
+        set +o pipefail
         node ./get_version.js
     - name: Make it pass
       if: always()
