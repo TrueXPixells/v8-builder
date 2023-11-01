@@ -23,7 +23,7 @@ jobs:
         exclude:
           - platform: android
             type: shared
-          - platform: windows
+          - platform: win
             type: shared
           - platform: linux
             arch: armv7
@@ -84,6 +84,7 @@ jobs:
         asset_name: v8_${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type }}-${{ matrix.type2 }}.zip
         asset_content_type: application/zip
     - name: Upload artifact
+      if: github.event_name == 'workflow_dispatch'
       uses: actions/upload-artifact@v3
       with:
         name: v8_${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type }}-${{ matrix.type2 }}.zip
