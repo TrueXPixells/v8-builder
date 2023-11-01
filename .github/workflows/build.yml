@@ -19,22 +19,22 @@ jobs:
         platform: [android, linux, win, mac]
         type: [static, shared]
         type2: [shipping, debug]
-        arch: [armv7, arm64, x64, x86]
+        arch: [arm, arm64, x64, x86]
         exclude:
           - platform: android
             type: shared
           - platform: win
             type: shared
           - platform: linux
-            arch: armv7
+            arch: arm
           - platform: linux
             arch: x86
           - platform: win
-            arch: armv7
+            arch: arm
           - platform: win
             arch: x86
           - platform: mac
-            arch: armv7
+            arch: arm
           - platform: mac
             arch: x86
     name: ${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type }}-${{ matrix.type2 }}
@@ -46,19 +46,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE
         chmod +x ./build.sh
-        _args="${{ github.event.inputs.version || github.event.release.tag_name }} $GITHUB_WORKSPACE ${{ matrix.platform }}-${{ matrix.arch }} ${{ matrix.platform }}"
-        if [ "${{ matrix.arch }}" = "armv7" ]; then
-        _args+=" arm.release arm"
-        fi
-        if [ "${{ matrix.arch }}" = "arm64" ]; then
-        _args+=" arm64.release arm64"
-        fi
-        if [ "${{ matrix.arch }}" = "x64" ]; then
-        _args+=" x64.release x64"
-        fi
-        if [ "${{ matrix.arch }}" = "x86" ]; then
-        _args+=" ia32.release x86"
-        fi
+        _args="${{ github.event.inputs.version || github.event.release.tag_name }} $GITHUB_WORKSPACE ${{ matrix.platform }} ${{ matrix.arch }}"
         if [ "${{ matrix.type }}" = "static" ]; then
         _args+=" true"
         else
