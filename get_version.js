@@ -8,7 +8,7 @@ var vars = [];
         vars.push(res.substring(res.indexOf("Version") + 8, res.indexOf("Change-Id:")).trim())
     }
 })().then(() => {
-    const ver = vars.map(a => a.split('.').map(n => +n + 100000).join('.')).sort().map(a => a.split('.').map(n => +n - 100000).join('.'))[1];
+    const ver = vars.map(a => a.split('.').map(n => +n + 100000).join('.')).sort().map(a => a.split('.').map(n => +n - 100000).join('.'))[0];
     new GitHub(process.env.GITHUB_TOKEN).repos.createRelease({
       owner: context.repo.owner,
       repo: context.repo.repo,
