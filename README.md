@@ -6,7 +6,6 @@ High re-write of https://github.com/tbossi/v8-builder
 
 ## Building info
 **V8 is compiled as is**, without patches or changes of any kind.
-The version used to compile is the most recent stable shown at https://omahaproxy.appspot.com (as described [here](https://v8.dev/docs/source-code#source-code-branches)).
 
 V8 binaries are built for the following platforms:
 - Linux (armv7, arm64, x64)
