@@ -4,8 +4,6 @@ High re-write of https://github.com/tbossi/v8-builder
 
 [![Build V8](https://github.com/TrueXPixells/v8-builder/actions/workflows/build.yml/badge.svg)](https://github.com/TrueXPixells/v8-builder)
 
-[Click to go last known good build](https://github.com/TrueXPixells/v8-builder/releases/tag/11.8.173)
-
 ## Building info
 **V8 is compiled as is**, without patches or changes of any kind.
 The version used to compile is the most recent stable shown at https://omahaproxy.appspot.com (as described [here](https://v8.dev/docs/source-code#source-code-branches)).
