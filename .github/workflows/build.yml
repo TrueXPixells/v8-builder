@@ -80,6 +80,7 @@ jobs:
   del_old:
     runs-on: ubuntu-latest
     name: Delete Old
+    if: github.event_name == 'release'
     steps:
     - uses: dev-drprasad/delete-older-releases@v0.3.2
       with:
