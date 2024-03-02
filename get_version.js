@@ -15,7 +15,7 @@ var vars = [];
       tag_name: ver,
       name: `V8 Build (${ver})`,
       draft: false,
-      prerelease: true,
+      prerelease: false,
       target_commitish: context.sha
     });
 })
