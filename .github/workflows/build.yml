@@ -77,13 +77,4 @@ jobs:
       with:
         name: v8_${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type }}-${{ matrix.type2 }}.zip
         path: ./v8.zip
-  del_old:
-    runs-on: ubuntu-latest
-    name: Delete Old
-    if: github.event_name == 'release'
-    steps:
-    - uses: dev-drprasad/delete-older-releases@v0.3.2
-      with:
-        keep_latest: 1
-      env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
