@@ -127,8 +127,4 @@ cp ~/v8/v8/out.gn/$ARCH.release/obj/*.lib ~/v8_zip
 # Enable "exit on error"
 set -e
 
-if [ $PLATFORM != "win" ]; then
 tar -cJvf v8.tar.xz ~/v8_zip/* 1> nul
-else
-7z a v8.zip ~/v8_zip/* 1> nul
-fi
