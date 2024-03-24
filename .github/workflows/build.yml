@@ -41,6 +41,38 @@ jobs:
     runs-on: ${{ (( matrix.platform == 'mac' || matrix.platform == 'ios') && 'macos-13') || ( matrix.platform == 'win' && 'windows-latest') || (( matrix.platform == 'linux' ||  matrix.platform == 'android') && 'ubuntu-latest') }}
     steps:
     - uses: actions/checkout@v4
+
+    - name: Configure linux runner
+      if: runner.os == 'Linux'
+      run: |
+        sudo sudo apt-get update -y
+        sudo sudo apt-get upgrade -y
+
+    - name: Configure git
+      run: |
+        git config --global user.name "V8 Builder"
+        git config --global user.email "v8.builder@localhost"
+        git config --global core.autocrlf false
+        git config --global core.filemode false
+
+    - name: Clone V8 - Windows
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        cd ~
+        Invoke-WebRequest https://storage.googleapis.com/chrome-infra/depot_tools.zip -O depot_tools.zip
+        7z x depot_tools.zip -o*
+        $env:PATH += ";$HOME/depot_tools"
+
+    - name: Clone V8 - Linux
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        cd ~
+        git clone -q https://chromium.googlesource.com/chromium/tools/depot_tools.git
+        export PATH=$(pwd)/depot_tools:$PATH
+      
+
     - name: Run build script
       shell: bash
       run: |
@@ -68,13 +100,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./v8.zip
-        asset_name: v8_${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type }}-${{ matrix.type2 }}.zip
-        asset_content_type: application/zip
+        asset_path: ./v8.tar.xz
+        asset_name: v8_${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type }}-${{ matrix.type2 }}.tar.xz
+        asset_content_type: application/x-xz
     - name: Upload artifact
       if: github.event_name == 'workflow_dispatch'
       uses: actions/upload-artifact@v3
       with:
-        name: v8_${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type }}-${{ matrix.type2 }}.zip
-        path: ./v8.zip
+        name: v8_${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.type }}-${{ matrix.type2 }}.tar.xz
+        path: ./v8.tar.xz
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
